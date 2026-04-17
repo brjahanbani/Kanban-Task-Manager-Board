@@ -1,0 +1,165 @@
+.board-column {
+  background-color: var(--col-bg, var(--bg-secondary));
+  border-radius: var(--radius-lg);
+  width: 340px;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100vh - 120px);
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+}
+
+/* ---- Column header ---- */
+.column-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: grab;
+  user-select: none;
+}
+
+.column-header:active {
+  cursor: grabbing;
+}
+
+/* Coloured accent bar on the left of the header */
+.column-accent-bar {
+  width: 3px;
+  height: 18px;
+  border-radius: 99px;
+  background-color: var(--col-accent, var(--accent-color));
+  flex-shrink: 0;
+}
+
+.column-title-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  flex: 1;
+}
+
+.column-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Bold yellow styling for Force In Progress column */
+.column-title-warning {
+  color: #f4c430;
+  font-weight: 800;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  text-shadow: 0 0 12px rgba(234, 179, 8, 0.55);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.col-warning-icon {
+  font-size: 1.1rem;
+  filter: drop-shadow(0 0 6px rgba(234,179,8,0.9));
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+.column-task-count {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+}
+
+/* Delete button — hidden until hover */
+.col-delete-btn {
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  margin-left: auto;
+}
+
+.column-header:hover .col-delete-btn {
+  opacity: 1;
+}
+
+/* ---- Task list area ---- */
+.column-content {
+  padding: var(--spacing-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+/* ---- Add task form ---- */
+.add-task-container {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.add-task-input,
+.add-task-textarea {
+  width: 100%;
+  background-color: var(--bg-tertiary);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-2);
+  color: var(--text-primary);
+  font-family: inherit;
+  outline: none;
+  transition: border-color var(--transition-fast);
+}
+
+.add-task-input {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.add-task-textarea {
+  resize: none;
+  min-height: 52px;
+  font-size: 0.8rem;
+}
+
+.add-task-input:focus,
+.add-task-textarea:focus {
+  border-color: var(--accent-color);
+}
+
+.add-task-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}
+
+/* ---- "+ Add task" trigger button ---- */
+.add-task-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: 0.45rem var(--spacing-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background-color: transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.add-task-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}

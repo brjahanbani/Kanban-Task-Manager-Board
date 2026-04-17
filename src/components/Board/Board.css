@@ -1,0 +1,72 @@
+.board-container {
+  padding: var(--spacing-6);
+  height: calc(100vh - 73px); /* 73px is approx header height */
+  overflow-x: auto;
+  overflow-y: hidden;
+  display: flex;
+}
+
+.board-columns-wrapper {
+  display: flex;
+  gap: var(--spacing-6);
+  height: 100%;
+}
+
+.add-column-wrapper {
+  min-width: 300px;
+  width: 300px;
+  height: max-content;
+}
+
+.add-column-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-4);
+  background-color: transparent;
+  border: 1px dashed var(--text-secondary);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all var(--transition-fast);
+}
+
+.add-column-btn:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.add-column-input-container {
+  background-color: var(--bg-secondary);
+  padding: var(--spacing-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.add-column-input-container input {
+  width: 100%;
+  background-color: var(--bg-tertiary);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-2);
+  color: var(--text-primary);
+  outline: none;
+  font-size: 1rem;
+}
+
+.add-column-input-container input:focus {
+  box-shadow: 0 0 0 1px var(--accent-color);
+}
+
+.add-column-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+}

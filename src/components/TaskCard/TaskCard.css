@@ -1,0 +1,181 @@
+.task-card {
+  background-color: var(--task-bg, var(--bg-elevated));
+  padding: var(--spacing-3);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: grab;
+  position: relative;
+  border: 1px solid var(--task-border, var(--bg-tertiary));
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+  min-height: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.task-card:hover {
+  background-color: var(--task-hover-bg, var(--bg-elevated));
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-md);
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+/* Dragging ghost placeholder */
+.task-card-dragging {
+  opacity: 0.35;
+  border: 2px dashed var(--accent-color);
+  background-color: transparent !important;
+  pointer-events: none;
+}
+
+/* Editing state — no grab cursor, full opacity, accent border */
+.task-card-editing {
+  cursor: default;
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-md);
+  background-color: var(--task-bg, var(--bg-elevated));
+}
+
+.task-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.task-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+/* ---- Warning badge (Force In Progress column) ---- */
+.task-warning-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: linear-gradient(135deg, rgba(234,179,8,0.22), rgba(234,179,8,0.1));
+  border: 1px solid rgba(234, 179, 8, 0.45);
+  border-radius: 4px;
+  padding: 3px 7px;
+  margin-bottom: 4px;
+  width: fit-content;
+}
+
+.warning-triangle {
+  font-size: 0.95rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 4px rgba(234,179,8,0.8));
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+.warning-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f4c430;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.55; }
+}
+
+.task-desc {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hover-reveal action buttons in top-right corner */
+.task-actions {
+  position: absolute;
+  top: var(--spacing-2);
+  right: var(--spacing-2);
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.task-card:hover .task-actions {
+  opacity: 1;
+}
+
+/* Shared icon button */
+.icon-btn {
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.icon-btn.danger:hover {
+  color: var(--danger-color);
+  background-color: rgba(239, 68, 68, 0.12);
+}
+
+.icon-btn.success:hover {
+  color: var(--success-color);
+  background-color: rgba(34, 197, 94, 0.12);
+}
+
+/* Edit mode layout */
+.task-edit-mode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.task-edit-mode input,
+.task-edit-mode textarea {
+  width: 100%;
+  background-color: var(--bg-tertiary);
+  border: 1px solid var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-2);
+  color: var(--text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.task-edit-mode input:focus,
+.task-edit-mode textarea:focus {
+  border-color: var(--accent-color);
+}
+
+.task-edit-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.task-edit-desc {
+  resize: none;
+  min-height: 56px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.task-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-1);
+}

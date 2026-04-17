@@ -1,0 +1,9 @@
+@import './styles/variables.css';
+@import './styles/global.css';
+
+/* Optional: Overriding App root if necessary */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
