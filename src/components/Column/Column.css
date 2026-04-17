@@ -143,6 +143,40 @@
   gap: var(--spacing-2);
 }
 
+/* Deadline field inside add-task form */
+.deadline-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.deadline-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.deadline-input {
+  font-size: 0.78rem;
+  color-scheme: dark;
+}
+
+.clear-deadline-btn {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  text-decoration: underline;
+  background: none;
+  text-align: left;
+  padding: 0;
+  transition: color var(--transition-fast);
+}
+
+.clear-deadline-btn:hover {
+  color: var(--text-secondary);
+}
+
 /* ---- "+ Add task" trigger button ---- */
 .add-task-btn {
   display: flex;

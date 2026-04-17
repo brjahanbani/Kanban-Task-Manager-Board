@@ -12,9 +12,9 @@ interface TaskState {
   deleteColumn: (id: Id) => void;
   updateColumn: (id: Id, title: string) => void;
   
-  addTask: (columnId: Id, title: string, description?: string) => void;
+  addTask: (columnId: Id, title: string, description?: string, deadline?: number) => void;
   deleteTask: (id: Id) => void;
-  updateTask: (id: Id, title: string, description?: string) => void;
+  updateTask: (id: Id, title: string, description?: string, deadline?: number) => void;
   
   // Drag and Drop updates
   setColumns: (columns: Column[]) => void;
@@ -51,16 +51,15 @@ export const useTaskStore = create<TaskState>()(
           )
         })),
         
-      addTask: (columnId, title, description) =>
+      addTask: (columnId, title, description, deadline) =>
         set((state) => ({
-          tasks: [...state.tasks, { 
-            id: generateId(), 
-            columnId, 
-            title, 
+          tasks: [...state.tasks, {
+            id: generateId(),
+            columnId,
+            title,
             description,
-            commentsCount: Math.floor(Math.random() * 5), // Mock data for UI
-            attachmentsCount: Math.floor(Math.random() * 3), // Mock data for UI
-            createdAt: Date.now() 
+            deadline,
+            createdAt: Date.now()
           }]
         })),
         
@@ -69,10 +68,10 @@ export const useTaskStore = create<TaskState>()(
           tasks: state.tasks.filter((task) => task.id !== id)
         })),
         
-      updateTask: (id, title, description) =>
+      updateTask: (id, title, description, deadline) =>
         set((state) => ({
-          tasks: state.tasks.map((task) => 
-            task.id === id ? { ...task, title, description } : task
+          tasks: state.tasks.map((task) =>
+            task.id === id ? { ...task, title, description, deadline } : task
           )
         })),
         

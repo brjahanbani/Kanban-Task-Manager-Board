@@ -5,8 +5,7 @@ export interface Task {
   columnId: Id;
   title: string;
   description?: string;
-  commentsCount?: number;
-  attachmentsCount?: number;
+  deadline?: number;   // Unix ms timestamp — when the task is due
   createdAt?: number;
 }
 

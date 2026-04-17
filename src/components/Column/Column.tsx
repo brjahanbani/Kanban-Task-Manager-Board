@@ -16,7 +16,15 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const [isAddingTask, setIsAddingTask] = useState(false);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDesc, setNewTaskDesc] = useState('');
+  const [newTaskDeadline, setNewTaskDeadline] = useState('');
   const { addTask, deleteColumn } = useTaskStore();
+
+  // Returns a datetime-local string 24h from now (the default)
+  const defaultDeadline = () => {
+    const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    // Format: YYYY-MM-DDTHH:mm  (datetime-local expects this)
+    return d.toISOString().slice(0, 16);
+  };
 
   const tasksIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
 
@@ -89,9 +97,13 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
 
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
-      addTask(column.id, newTaskTitle, newTaskDesc);
+      const deadlineMs = newTaskDeadline
+        ? new Date(newTaskDeadline).getTime()
+        : undefined;
+      addTask(column.id, newTaskTitle, newTaskDesc, deadlineMs);
       setNewTaskTitle('');
       setNewTaskDesc('');
+      setNewTaskDeadline('');
       setIsAddingTask(false);
     }
   };
@@ -99,6 +111,7 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const handleCancelAdd = () => {
     setNewTaskTitle('');
     setNewTaskDesc('');
+    setNewTaskDeadline('');
     setIsAddingTask(false);
   };
 
@@ -153,6 +166,23 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
               onChange={(e) => setNewTaskDesc(e.target.value)}
               onKeyDown={stopKeys}
             />
+            <div className="deadline-field">
+              <label className="deadline-label">⏰ Deadline</label>
+              <input
+                type="datetime-local"
+                className="add-task-input deadline-input"
+                value={newTaskDeadline || defaultDeadline()}
+                onChange={(e) => setNewTaskDeadline(e.target.value)}
+                onKeyDown={stopKeys}
+              />
+              <button
+                className="clear-deadline-btn"
+                onClick={() => setNewTaskDeadline('')}
+                title="Remove deadline"
+              >
+                No deadline
+              </button>
+            </div>
             <div className="add-task-actions">
               <button className="btn btn-primary btn-sm" onClick={handleAddTask}>
                 Add task
