@@ -22,7 +22,6 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   // Returns a datetime-local string 24h from now (the default)
   const defaultDeadline = () => {
     const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    // Format: YYYY-MM-DDTHH:mm  (datetime-local expects this)
     return d.toISOString().slice(0, 16);
   };
 
@@ -39,7 +38,6 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
     data: { type: 'Column', column },
   });
 
-  // Resolve theme by canonical ID first, then fall back to title keyword matching
   const isForceInProgress = column.title.toLowerCase().includes('force') &&
     column.title.toLowerCase().includes('progress');
 
@@ -115,7 +113,7 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
     setIsAddingTask(false);
   };
 
-  // Stop ALL keyboard events inside the add-task form from bubbling to dnd-kit
+  // Stop ALL keyboard events inside the form from bubbling to dnd-kit
   const stopKeys = (e: React.KeyboardEvent) => e.stopPropagation();
 
   return (
@@ -140,17 +138,19 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
         </button>
       </div>
 
-      {/* Tasks list */}
+      {/* ── Scrollable task list ── */}
       <div className="column-content">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} showWarning={isForceInProgress} />
           ))}
         </SortableContext>
+      </div>
 
-        {/* Add task form */}
+      {/* ── Sticky footer: always visible, never scrolls away ── */}
+      <div className="column-footer" onPointerDown={(e) => e.stopPropagation()}>
         {isAddingTask ? (
-          <div className="add-task-container" onPointerDown={(e) => e.stopPropagation()}>
+          <div className="add-task-container">
             <input
               autoFocus
               className="add-task-input"
@@ -184,10 +184,10 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
               </button>
             </div>
             <div className="add-task-actions">
-              <button className="btn btn-primary btn-sm" onClick={handleAddTask}>
+              <button className="footer-btn primary" onClick={handleAddTask}>
                 Add task
               </button>
-              <button className="btn btn-ghost btn-sm" onClick={handleCancelAdd}>
+              <button className="footer-btn ghost" onClick={handleCancelAdd}>
                 Cancel
               </button>
             </div>

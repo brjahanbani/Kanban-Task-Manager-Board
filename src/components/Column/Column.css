@@ -1,3 +1,6 @@
+/* ============================================================
+   Column layout
+   ============================================================ */
 .board-column {
   background-color: var(--col-bg, var(--bg-secondary));
   border-radius: var(--radius-lg);
@@ -5,14 +8,17 @@
   min-width: 340px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: calc(100vh - 120px);
+  /* Height is fully controlled by the parent flex container */
+  flex: 0 0 auto;    /* don't grow/shrink width-wise */
+  min-height: 0;     /* allow internal scroll to engage */
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(255, 255, 255, 0.05);
   overflow: hidden;
 }
 
-/* ---- Column header ---- */
+/* ============================================================
+   Column header — drag handle
+   ============================================================ */
 .column-header {
   display: flex;
   align-items: center;
@@ -21,13 +27,12 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: grab;
   user-select: none;
+  flex-shrink: 0;    /* never squish */
 }
 
-.column-header:active {
-  cursor: grabbing;
-}
+.column-header:active { cursor: grabbing; }
 
-/* Coloured accent bar on the left of the header */
+/* Coloured accent bar */
 .column-accent-bar {
   width: 3px;
   height: 18px;
@@ -41,20 +46,23 @@
   align-items: center;
   gap: var(--spacing-2);
   flex: 1;
+  min-width: 0;   /* allow text to truncate */
 }
 
 .column-title {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Bold yellow styling for Force In Progress column */
+/* Bold yellow — Force In Progress */
 .column-title-warning {
   color: #f4c430;
   font-weight: 800;
   font-size: 0.95rem;
-  letter-spacing: -0.01em;
   text-shadow: 0 0 12px rgba(234, 179, 8, 0.55);
   display: flex;
   align-items: center;
@@ -74,6 +82,7 @@
   background-color: rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-full);
   padding: 1px 7px;
+  flex-shrink: 0;
 }
 
 /* Delete button — hidden until hover */
@@ -81,31 +90,60 @@
   opacity: 0;
   transition: opacity var(--transition-fast);
   margin-left: auto;
+  flex-shrink: 0;
 }
+.column-header:hover .col-delete-btn { opacity: 1; }
 
-.column-header:hover .col-delete-btn {
-  opacity: 1;
-}
-
-/* ---- Task list area ---- */
+/* ============================================================
+   Task list — scrollable middle section
+   ============================================================ */
 .column-content {
   padding: var(--spacing-3);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
   overflow-y: auto;
-  flex-grow: 1;
+  flex: 1 1 0;      /* grow and shrink; allows footer to stay pinned */
+  min-height: 0;    /* critical: lets flex children shrink below content size */
 }
 
-/* ---- Add task form ---- */
+/* ============================================================
+   Column footer — NEVER scrolls; always pinned to bottom
+   ============================================================ */
+.column-footer {
+  flex-shrink: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── "+ Add task" trigger button ── */
+.add-task-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: 0.55rem var(--spacing-3);
+  color: var(--text-secondary);
+  background-color: transparent;
+  font-size: 0.85rem;
+  font-weight: 500;
+  width: 100%;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.add-task-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* ── Add-task form (inside footer) ── */
 .add-task-container {
   background-color: var(--bg-secondary);
   padding: var(--spacing-3);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--accent-color);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  /* Limit height so it can scroll internally if viewport is tiny */
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .add-task-input,
@@ -121,29 +159,13 @@
   transition: border-color var(--transition-fast);
 }
 
-.add-task-input {
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
-.add-task-textarea {
-  resize: none;
-  min-height: 52px;
-  font-size: 0.8rem;
-}
+.add-task-input { font-size: 0.9rem; font-weight: 600; }
+.add-task-textarea { resize: none; min-height: 52px; font-size: 0.8rem; }
 
 .add-task-input:focus,
-.add-task-textarea:focus {
-  border-color: var(--accent-color);
-}
+.add-task-textarea:focus { border-color: var(--accent-color); }
 
-.add-task-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-2);
-}
-
-/* Deadline field inside add-task form */
+/* Deadline field */
 .deadline-field {
   display: flex;
   flex-direction: column;
@@ -170,30 +192,53 @@
   background: none;
   text-align: left;
   padding: 0;
+  cursor: pointer;
+  font-family: inherit;
   transition: color var(--transition-fast);
 }
+.clear-deadline-btn:hover { color: var(--text-secondary); }
 
-.clear-deadline-btn:hover {
-  color: var(--text-secondary);
-}
-
-/* ---- "+ Add task" trigger button ---- */
-.add-task-btn {
+/* Action row */
+.add-task-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: var(--spacing-2);
-  padding: 0.45rem var(--spacing-3);
-  border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  background-color: transparent;
-  font-size: 0.85rem;
-  font-weight: 500;
-  width: 100%;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  padding-top: var(--spacing-1);
 }
 
-.add-task-btn:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+/* Self-contained button styles — no external dependency */
+.footer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.footer-btn.primary {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+.footer-btn.primary:hover { background-color: var(--accent-hover); }
+
+.footer-btn.ghost {
+  background-color: transparent;
+  color: var(--text-secondary);
+}
+.footer-btn.ghost:hover {
+  background-color: rgba(255, 255, 255, 0.06);
   color: var(--text-primary);
+}
+
+/* ============================================================
+   Keyframes (shared with TaskCard warning)
+   ============================================================ */
+@keyframes pulse-warning {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
 }

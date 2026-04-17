@@ -7,7 +7,7 @@
   position: relative;
   border: 1px solid var(--task-border, var(--bg-tertiary));
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
-  min-height: 70px;
+  /* min-height: 70px; */
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
@@ -202,6 +202,9 @@
   border-radius: var(--radius-sm);
   padding: 3px 7px;
   margin-top: 2px;
+  white-space: nowrap;      /* never wraps onto a second line */
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .deadline-icon {

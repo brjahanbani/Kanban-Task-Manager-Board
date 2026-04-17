@@ -8,9 +8,12 @@
 }
 
 .main-content {
-  flex: 1;
+  flex: 1 1 0;      /* grow, shrink, base-0 so it never exceeds 100vh */
+  min-height: 0;    /* critical: allows children to shrink below content size */
   overflow: hidden;
   position: relative;
+  display: flex;    /* pass flex context to board-container */
+  flex-direction: column;
 }
 
 /* Background grid effect for premium feel */
