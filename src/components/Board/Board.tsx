@@ -1,4 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
+import { supabase } from '../../lib/supabase';
+import React, { useMemo } from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -27,6 +30,12 @@ import type { Column, Task } from '../../types';
 import './Board.css';
 
 export const Board: React.FC = () => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => setUser(session?.user ?? null));
+  }, []);
+
   const {
     columns, tasks,
     setColumns, setTasks,
@@ -108,8 +117,8 @@ export const Board: React.FC = () => {
   };
 
   const handleAddColumn = () => {
-    if (newColumnTitle.trim()) {
-      addColumn(newColumnTitle);
+    if (newColumnTitle.trim() && user) {
+      addColumn(newColumnTitle, user.id);
       setNewColumnTitle('');
       setIsAddingColumn(false);
     }

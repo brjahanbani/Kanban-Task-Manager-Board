@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Plus, Trash2 } from 'lucide-react';
 import type { Column, Task } from '../../types';
 import { TaskCard } from '../TaskCard/TaskCard';
 import { useTaskStore } from '../../store/useTaskStore';
+import { supabase } from '../../lib/supabase';
 import './Column.css';
 
 interface ColumnProps {
@@ -17,7 +18,14 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDesc, setNewTaskDesc] = useState('');
   const [newTaskDeadline, setNewTaskDeadline] = useState('');
+  const [userId, setUserId] = useState<string | undefined>(undefined);
   const { addTask, deleteColumn } = useTaskStore();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUserId(session?.user?.id);
+    });
+  }, []);
 
   // Returns a datetime-local string 24h from now (the default)
   const defaultDeadline = () => {
@@ -98,7 +106,7 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
       const deadlineMs = newTaskDeadline
         ? new Date(newTaskDeadline).getTime()
         : undefined;
-      addTask(column.id, newTaskTitle, newTaskDesc, deadlineMs);
+      addTask(column.id, newTaskTitle, newTaskDesc, deadlineMs, userId);
       setNewTaskTitle('');
       setNewTaskDesc('');
       setNewTaskDeadline('');

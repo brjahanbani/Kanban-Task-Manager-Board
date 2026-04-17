@@ -34,13 +34,13 @@ interface TaskState {
   error: string | null;
 
   /** Load everything from Supabase on app mount */
-  init: () => Promise<void>;
+  init: (userId: string) => Promise<void>;
 
-  addColumn: (title: string) => Promise<void>;
+  addColumn: (title: string, userId: string) => Promise<void>;
   deleteColumn: (id: Id) => Promise<void>;
   updateColumn: (id: Id, title: string) => Promise<void>;
 
-  addTask: (columnId: Id, title: string, description?: string, deadline?: number) => Promise<void>;
+  addTask: (columnId: Id, title: string, description?: string, deadline?: number, userId?: string) => Promise<void>;
   deleteTask: (id: Id) => Promise<void>;
   updateTask: (id: Id, title: string, description?: string, deadline?: number) => Promise<void>;
 
@@ -61,31 +61,38 @@ export const useTaskStore = create<TaskState>()((set, get) => ({
   error: null,
 
   // ── init ──────────────────────────────────────────────────────────────────
-  init: async () => {
+  init: async (userId: string) => {
     set({ loading: true, error: null });
 
-    // Fetch columns
+    // Claim any rows that were saved before auth was added (user_id IS NULL)
+    await supabase.from('columns').update({ user_id: userId }).is('user_id', null);
+    await supabase.from('tasks').update({ user_id: userId }).is('user_id', null);
+
+    // Fetch columns belonging to this user
     let { data: cols, error: colErr } = await supabase
       .from('columns')
       .select('*')
+      .eq('user_id', userId)
       .order('position');
 
     if (colErr) { set({ loading: false, error: colErr.message }); return; }
 
-    // Seed default columns if DB is empty
+    // Seed default columns for new users
     if (!cols || cols.length === 0) {
+      const defaultWithUser = DEFAULT_COLS.map((c) => ({ ...c, user_id: userId }));
       const { data: seeded, error: seedErr } = await supabase
         .from('columns')
-        .insert(DEFAULT_COLS)
+        .insert(defaultWithUser)
         .select();
       if (seedErr) { set({ loading: false, error: seedErr.message }); return; }
       cols = seeded;
     }
 
-    // Fetch tasks
+    // Fetch tasks belonging to this user
     let { data: tsks, error: tskErr } = await supabase
       .from('tasks')
       .select('*')
+      .eq('user_id', userId)
       .order('position');
 
     if (tskErr) { set({ loading: false, error: tskErr.message }); return; }
@@ -157,9 +164,9 @@ export const useTaskStore = create<TaskState>()((set, get) => ({
   },
 
   // ── Column actions ────────────────────────────────────────────────────────
-  addColumn: async (title) => {
+  addColumn: async (title, userId) => {
     const { columns } = get();
-    const newCol = { id: generateId(), title, position: columns.length };
+    const newCol = { id: generateId(), title, position: columns.length, user_id: userId };
     const { error } = await supabase.from('columns').insert(newCol);
     if (error) return;
     set((s) => ({ columns: [...s.columns, { id: newCol.id, title }] }));
@@ -181,7 +188,7 @@ export const useTaskStore = create<TaskState>()((set, get) => ({
   },
 
   // ── Task actions ──────────────────────────────────────────────────────────
-  addTask: async (columnId, title, description, deadline) => {
+  addTask: async (columnId, title, description, deadline, userId) => {
     const { tasks } = get();
     const colTasks = tasks.filter((t) => t.columnId === columnId);
     const newTask = {
@@ -192,6 +199,7 @@ export const useTaskStore = create<TaskState>()((set, get) => ({
       deadline: deadline ?? null,
       position: colTasks.length,
       created_at: Date.now(),
+      user_id: userId ?? null,
     };
     const { data, error } = await supabase.from('tasks').insert(newTask).select().single();
     if (error || !data) return;
