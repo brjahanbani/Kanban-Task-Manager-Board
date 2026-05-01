@@ -150,7 +150,7 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
       <div className="column-content">
         <SortableContext items={tasksIds}>
           {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} showWarning={isForceInProgress} />
+            <TaskCard key={task.id} task={task} showWarning={isForceInProgress} isDoneColumn={column.id === 'done' || column.title.toLowerCase() === 'done'} />
           ))}
         </SortableContext>
       </div>

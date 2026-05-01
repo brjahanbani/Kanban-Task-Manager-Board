@@ -10,6 +10,7 @@ import './TaskCard.css';
 interface TaskCardProps {
   task: Task;
   showWarning?: boolean;
+  isDoneColumn?: boolean;
 }
 
 /** Convert a Unix-ms timestamp → 'YYYY-MM-DDTHH:mm' for datetime-local inputs */
@@ -25,7 +26,7 @@ function defaultDeadlineValue(): string {
   return toDatetimeLocal(Date.now() + 24 * 60 * 60 * 1000);
 }
 
-export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false }) => {
+export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, isDoneColumn = false }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDesc, setEditDesc] = useState(task.description || '');
@@ -84,31 +85,35 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false })
             onChange={(e) => setEditTitle(e.target.value)}
             onKeyDown={(e) => e.stopPropagation()}
           />
-          <textarea
-            className="task-edit-desc"
-            placeholder="Description (optional)"
-            value={editDesc}
-            onChange={(e) => setEditDesc(e.target.value)}
-            onKeyDown={(e) => e.stopPropagation()}
-          />
+          {!isDoneColumn && (
+            <>
+              <textarea
+                className="task-edit-desc"
+                placeholder="Description (optional)"
+                value={editDesc}
+                onChange={(e) => setEditDesc(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+              />
 
-          {/* Deadline editor */}
-          <div className="task-edit-deadline-section">
-            <label className="deadline-edit-label">⏰ Deadline</label>
-            <input
-              type="datetime-local"
-              className="task-edit-datetime"
-              value={editDeadline || defaultDeadlineValue()}
-              onChange={(e) => setEditDeadline(e.target.value)}
-              onKeyDown={(e) => e.stopPropagation()}
-            />
-            <button
-              className="clear-deadline-btn"
-              onClick={() => setEditDeadline('')}
-            >
-              Remove deadline
-            </button>
-          </div>
+              {/* Deadline editor */}
+              <div className="task-edit-deadline-section">
+                <label className="deadline-edit-label">⏰ Deadline</label>
+                <input
+                  type="datetime-local"
+                  className="task-edit-datetime"
+                  value={editDeadline || defaultDeadlineValue()}
+                  onChange={(e) => setEditDeadline(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                />
+                <button
+                  className="clear-deadline-btn"
+                  onClick={() => setEditDeadline('')}
+                >
+                  Remove deadline
+                </button>
+              </div>
+            </>
+          )}
 
           <div className="task-edit-actions">
             <button className="icon-btn success" onClick={handleSave} title="Save">
@@ -142,11 +147,11 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false })
         )}
 
         <h3 className="task-title">{task.title}</h3>
-        {task.description && <p className="task-desc">{task.description}</p>}
+        {!isDoneColumn && task.description && <p className="task-desc">{task.description}</p>}
       </div>
 
       {/* Deadline display */}
-      {task.deadline && (
+      {!isDoneColumn && task.deadline && (
         <div className={`task-deadline${countdown?.expired ? ' task-deadline-expired' : ''}`}>
           {countdown?.expired ? (
             <>
