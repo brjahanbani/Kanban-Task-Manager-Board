@@ -181,132 +181,180 @@
   background-color: rgba(34, 197, 94, 0.12);
 }
 
-/* Edit mode layout */
-.task-edit-mode {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-2);
-  width: 100%;
-}
-
-.task-edit-mode input,
-.task-edit-mode textarea {
-  width: 100%;
-  background-color: var(--bg-tertiary);
-  border: 1px solid var(--bg-tertiary);
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-2);
-  color: var(--text-primary);
-  outline: none;
-  font-family: inherit;
-}
-
-.task-edit-mode input:focus,
-.task-edit-mode textarea:focus {
-  border-color: var(--accent-color);
-}
-
-.task-edit-title {
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.task-edit-desc {
-  resize: none;
-  min-height: 56px;
-  font-size: 0.78rem;
-  color: var(--text-secondary);
-}
-
-.task-edit-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: var(--spacing-1);
-}
-
-/* ======= Deadline countdown strip (view mode) ======= */
-.task-deadline {
+/* ======= Modal Edit Form ======= */
+.task-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 9999;
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background-color: rgba(255, 255, 255, 0.04);
-  border-radius: var(--radius-sm);
-  padding: 3px 7px;
-  margin-top: 2px;
-  white-space: nowrap;      /* never wraps onto a second line */
-  overflow: hidden;
-  text-overflow: ellipsis;
+  justify-content: center;
+  animation: fadeIn 0.25s ease-out;
 }
 
-.deadline-icon {
-  font-size: 0.8rem;
-  line-height: 1;
-}
-
-.deadline-remaining {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
-}
-
-/* Expired countdown strip */
-.task-deadline-expired {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.deadline-expired-text {
-  color: #f87171;
-  font-weight: 600;
-}
-
-/* ======= Deadline edit section (inside edit mode) ======= */
-.task-edit-deadline-section {
+.task-modal-content {
+  background: linear-gradient(160deg, var(--bg-secondary) 0%, #1a1a2e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  width: 90%;
+  max-width: 540px;
+  box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.1);
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  overflow: hidden;
 }
 
-.deadline-edit-label {
-  font-size: 0.7rem;
+.task-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px 16px;
+}
+
+.task-modal-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.task-modal-body {
+  padding: 0 32px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  margin-left: 4px;
 }
 
-.task-edit-datetime {
+.task-edit-title-modal,
+.task-edit-desc-modal,
+.task-edit-datetime-modal {
   width: 100%;
-  background-color: var(--bg-tertiary);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  padding: var(--spacing-2);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px 20px;
   color: var(--text-primary);
   font-family: inherit;
-  font-size: 0.78rem;
   outline: none;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.task-edit-title-modal {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.task-edit-desc-modal {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.task-edit-datetime-modal {
+  font-size: 0.9rem;
   color-scheme: dark;
-  transition: border-color var(--transition-fast);
 }
 
-.task-edit-datetime:focus {
-  border-color: var(--accent-color);
+.task-edit-title-modal:focus,
+.task-edit-desc-modal:focus,
+.task-edit-datetime-modal:focus {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15), inset 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.clear-deadline-btn {
-  font-size: 0.68rem;
-  color: var(--text-tertiary);
-  text-decoration: underline;
-  background: none;
-  text-align: left;
-  padding: 0;
-  font-family: inherit;
+.deadline-input-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.clear-deadline-btn-modal {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: color var(--transition-fast);
+  transition: all 0.2s ease;
 }
 
-.clear-deadline-btn:hover {
+.clear-deadline-btn-modal:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.task-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 32px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.modal-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.modal-btn.ghost {
+  background: transparent;
   color: var(--text-secondary);
+}
+
+.modal-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.modal-btn.primary {
+  background: linear-gradient(135deg, var(--accent-color), #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.modal-btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
