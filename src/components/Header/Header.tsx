@@ -25,15 +25,22 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
         </h1>
       </div>
 
-      {user && (
-        <div className="header-user">
-          <span className="user-email">{user.email}</span>
-          <button className="logout-btn" onClick={handleLogout} title="Sign out">
-            <LogOut size={16} />
-            <span>Sign out</span>
-          </button>
+      <div className="header-right">
+        <div className="header-dates">
+          <span className="date-row tr">{new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }).format(new Date())}</span>
+          <span className="date-row fa">{new Intl.DateTimeFormat('fa-IR', { calendar: 'persian', day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }).format(new Date())}</span>
         </div>
-      )}
+
+        {user && (
+          <div className="header-user">
+            <span className="user-email">{user.email}</span>
+            <button className="logout-btn" onClick={handleLogout} title="Sign out">
+              <LogOut size={16} />
+              <span>Sign out</span>
+            </button>
+          </div>
+        )}
+      </div>
     </header>
   );
 };
