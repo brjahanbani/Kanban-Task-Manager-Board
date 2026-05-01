@@ -152,6 +152,12 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
           {tasks.map((task) => (
             <TaskCard key={task.id} task={task} showWarning={isForceInProgress} isDoneColumn={column.id === 'done' || column.title.toLowerCase() === 'done'} />
           ))}
+          {tasks.length === 0 && (
+            <div className="zen-mode-empty">
+              <span className="zen-icon">🍃</span>
+              <p>Nothing here.</p>
+            </div>
+          )}
         </SortableContext>
       </div>
 

@@ -6,17 +6,37 @@
   cursor: grab;
   position: relative;
   border: 1px solid var(--task-border, var(--bg-tertiary));
-  transition: box-shadow var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
   /* min-height: 70px; */
   display: flex;
   flex-direction: column;
   gap: var(--spacing-2);
+  /* Optional fixed height to prevent card changing size on dragging */
+  /* min-height: 100px; */
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+}
+
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.06), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .task-card:hover {
-  background-color: var(--task-hover-bg, var(--bg-elevated));
-  border-color: var(--accent-color);
-  box-shadow: var(--shadow-md);
+  border-color: var(--task-border);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(255, 255, 255, 0.03);
+}
+
+.task-card:hover::before {
+  left: 200%;
 }
 
 .task-card:active {
@@ -47,6 +67,27 @@
   border-color: var(--accent-color);
   box-shadow: var(--shadow-md);
   background-color: var(--task-bg, var(--bg-elevated));
+}
+
+.zen-mode-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: var(--text-tertiary);
+  margin: var(--spacing-4);
+  text-align: center;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  user-select: none;
+}
+
+.zen-icon {
+  font-size: 2.5rem;
+  margin-bottom: 8px;
+  filter: grayscale(80%) sepia(20%);
 }
 
 .task-card-content {

@@ -146,7 +146,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
           </div>
         )}
 
-        <h3 className="task-title">{task.title}</h3>
+        <h3 className={`task-title ${isDoneColumn ? 'task-title-done' : ''}`}>{task.title}</h3>
         {!isDoneColumn && task.description && <p className="task-desc">{task.description}</p>}
       </div>
 
