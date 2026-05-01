@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 import React, { useMemo } from 'react';
+import confetti from 'canvas-confetti';
 import {
   DndContext,
   DragOverlay,
@@ -29,6 +30,26 @@ import { useTaskStore } from '../../store/useTaskStore';
 import type { Column, Task } from '../../types';
 import './Board.css';
 
+const triggerConfetti = () => {
+  const duration = 2000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 25, spread: 360, ticks: 60, zIndex: 1000 };
+
+  const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+  const interval: any = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 40 * (timeLeft / duration);
+    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+  }, 250);
+};
+
 export const Board: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
 
@@ -49,6 +70,11 @@ export const Board: React.FC = () => {
   const [newColumnTitle, setNewColumnTitle] = useState('');
 
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
+
+  const doneColumnIds = useMemo(() => columns.filter(col => col.title.toLowerCase().includes('done')).map(c => c.id), [columns]);
+  const totalTasks = tasks.length;
+  const doneTasksCount = tasks.filter(task => doneColumnIds.includes(task.columnId)).length;
+  const progressPercent = totalTasks === 0 ? 0 : Math.round((doneTasksCount / totalTasks) * 100);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -113,6 +139,18 @@ export const Board: React.FC = () => {
     if (active.data.current?.type === 'Task') {
       // Tasks were already reordered optimistically in handleDragOver
       syncTaskOrder(tasks);       // ← persist final order to Supabase
+      
+      const activeTaskIndex = tasks.findIndex((t) => t.id === activeId);
+      if (activeTaskIndex !== -1) {
+        const newColumnId = tasks[activeTaskIndex].columnId;
+        const oldColumnId = active.data.current.task.columnId;
+        const isNowDone = doneColumnIds.includes(newColumnId);
+        const wasAlreadyDone = doneColumnIds.includes(oldColumnId);
+        
+        if (isNowDone && !wasAlreadyDone) {
+          triggerConfetti();
+        }
+      }
     }
   };
 
@@ -126,6 +164,22 @@ export const Board: React.FC = () => {
 
   return (
     <div className="board-container">
+      {/* Surprise 1: Ambient Glow */}
+      <div className="ambient-glow glow-1" />
+      <div className="ambient-glow glow-2" />
+      <div className="ambient-glow glow-3" />
+
+      {/* Surprise 2: Sleek Progress Bar */}
+      <div className="board-progress-container">
+        <div className="progress-info">
+          <span className="progress-title">Project Completion</span>
+          <span className="progress-percentage">{progressPercent}%</span>
+        </div>
+        <div className="progress-track">
+          <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
+        </div>
+      </div>
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
