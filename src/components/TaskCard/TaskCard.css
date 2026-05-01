@@ -181,6 +181,47 @@
   background-color: rgba(34, 197, 94, 0.12);
 }
 
+/* ======= Deadline countdown strip (view mode) ======= */
+.task-deadline {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  padding: 3px 6px;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: fit-content;
+}
+
+.deadline-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.deadline-remaining {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* Expired countdown strip */
+.task-deadline-expired {
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.deadline-expired-text {
+  color: #fca5a5;
+  font-weight: 600;
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
 /* ======= Modal Edit Form ======= */
 .task-modal-backdrop {
   position: fixed;
