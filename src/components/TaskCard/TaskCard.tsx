@@ -138,15 +138,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
       {...listeners}
     >
       <div className="task-card-content">
-        {/* Force-In-Progress warning badge */}
-        {showWarning && (
-          <div className="task-warning-badge" title="Force In Progress — handle with care!">
-            <span className="warning-triangle">⚠</span>
-            <span className="warning-label">Force In Progress</span>
-          </div>
-        )}
-
-        <h3 className={`task-title ${isDoneColumn ? 'task-title-done' : ''}`}>{task.title}</h3>
+        <div className="task-title-wrapper" style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
+          {showWarning && !isDoneColumn && (
+            <span className="animated-fire" title="Force In Progress!">🔥</span>
+          )}
+          <h3 className={`task-title ${isDoneColumn ? 'task-title-done' : ''}`}>{task.title}</h3>
+        </div>
         {!isDoneColumn && task.description && <p className="task-desc">{task.description}</p>}
       </div>
 
