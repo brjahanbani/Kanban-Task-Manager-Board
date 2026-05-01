@@ -1,6 +1,6 @@
 import React from 'react';
 import type { User } from '@supabase/supabase-js';
-import { LogOut } from 'lucide-react';
+import { LogOut, Kanban } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import './Header.css';
 
@@ -16,8 +16,13 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
   return (
     <header className="app-header">
       <div className="header-brand">
-        <div className="logo-mark">K</div>
-        <h1>Kanban Board</h1>
+        <div className="logo-mark">
+          <Kanban size={20} strokeWidth={2.5} />
+        </div>
+        <h1 className="logotype">
+          <span className="logotype-kanban">Kanban</span>
+          <span className="logotype-board">Board</span>
+        </h1>
       </div>
 
       {user && (
