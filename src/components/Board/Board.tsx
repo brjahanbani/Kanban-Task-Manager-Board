@@ -66,6 +66,7 @@ export const Board: React.FC = () => {
 
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const [draggedTaskInitialCol, setDraggedTaskInitialCol] = useState<string | null>(null);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
 
@@ -84,7 +85,11 @@ export const Board: React.FC = () => {
   const handleDragStart = (event: DragStartEvent) => {
     const { data } = event.active;
     if (data.current?.type === 'Column') { setActiveColumn(data.current.column); return; }
-    if (data.current?.type === 'Task')   { setActiveTask(data.current.task);   return; }
+    if (data.current?.type === 'Task')   { 
+      setActiveTask(data.current.task); 
+      setDraggedTaskInitialCol(data.current.task.columnId);
+      return; 
+    }
   };
 
   const handleDragOver = (event: DragOverEvent) => {
@@ -140,17 +145,13 @@ export const Board: React.FC = () => {
       // Tasks were already reordered optimistically in handleDragOver
       syncTaskOrder(tasks);       // ← persist final order to Supabase
       
-      const activeTaskIndex = tasks.findIndex((t) => t.id === activeId);
-      if (activeTaskIndex !== -1) {
-        const newColumnId = tasks[activeTaskIndex].columnId;
-        const oldColumnId = active.data.current.task.columnId;
-        const isNowDone = doneColumnIds.includes(newColumnId);
-        const wasAlreadyDone = doneColumnIds.includes(oldColumnId);
-        
-        if (isNowDone && !wasAlreadyDone) {
+      if (draggedTaskInitialCol) {
+        const newColumnId = tasks.find(t => t.id === activeId)?.columnId;
+        if (newColumnId && doneColumnIds.includes(newColumnId) && !doneColumnIds.includes(draggedTaskInitialCol)) {
           triggerConfetti();
         }
       }
+      setDraggedTaskInitialCol(null);
     }
   };
 
@@ -171,12 +172,12 @@ export const Board: React.FC = () => {
 
       {/* Surprise 2: Sleek Progress Bar */}
       <div className="board-progress-container">
-        <div className="progress-info">
-          <span className="progress-title">Project Completion</span>
-          <span className="progress-percentage">{progressPercent}%</span>
-        </div>
         <div className="progress-track">
           <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
+          <div className="progress-text-overlay">
+            <span className="progress-title">Project Completion</span>
+            <span className="progress-percentage">{progressPercent}%</span>
+          </div>
         </div>
       </div>
 
