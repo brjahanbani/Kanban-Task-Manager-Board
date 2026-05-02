@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Kanban } from 'lucide-react';
+import { APP_VERSION } from '../../utils/version';
 import { supabase } from '../../lib/supabase';
 import './LoginPage.css';
 
@@ -109,8 +110,11 @@ export const LoginPage: React.FC = () => {
           <button onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }} type="button">
             {mode === 'login' ? 'Sign Up' : 'Sign In'}
           </button>
+          <br />
+          <span className="login-version">Version:{APP_VERSION}</span>
         </p>
+        </div>
+        
       </div>
-    </div>
   );
 };

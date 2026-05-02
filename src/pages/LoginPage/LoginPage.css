@@ -354,3 +354,11 @@
   color: #d8b4fe;
   text-decoration: underline;
 }
+
+.login-version{
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}

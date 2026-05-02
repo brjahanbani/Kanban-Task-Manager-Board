@@ -1,5 +1,6 @@
 import React from 'react';
 import type { User } from '@supabase/supabase-js';
+import { APP_VERSION } from '../../utils/version';
 import { LogOut, Kanban } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import './Header.css';
@@ -23,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
           <span className="logotype-kanban">Kanban</span>
           <span className="logotype-board">Board</span>
         </h1>
+        <span className="header-version">v: {APP_VERSION}</span>
       </div>
 
       <div className="header-right">
@@ -41,6 +43,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
           </div>
         )}
       </div>
+      
     </header>
   );
 };
