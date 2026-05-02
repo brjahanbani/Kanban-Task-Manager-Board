@@ -1,7 +1,7 @@
 import React from 'react';
 import type { User } from '@supabase/supabase-js';
 import { APP_VERSION } from '../../utils/version';
-import { LogOut, Kanban } from 'lucide-react';
+import { LogOut, Kanban, Calendar } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import './Header.css';
 
@@ -28,9 +28,16 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
       </div>
 
       <div className="header-right">
-        <div className="header-dates">
-          <span className="date-row tr">{new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }).format(new Date())}</span>
-          <span className="date-row fa">{new Intl.DateTimeFormat('fa-IR', { calendar: 'persian', day: 'numeric', month: 'long', year: 'numeric', weekday: 'long' }).format(new Date())}</span>
+        <div className="header-dates-badge">
+          <div className="date-item tr">
+            <Calendar size={12} className="date-icon-tr" />
+            <span className="date-text">{new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date())}</span>
+          </div>
+          <div className="date-divider"></div>
+          <div className="date-item fa">
+            <span className="date-text">{new Intl.DateTimeFormat('fa-IR', { calendar: 'persian', day: 'numeric', month: 'short', year: 'numeric' }).format(new Date())}</span>
+            <Calendar size={12} className="date-icon-fa" />
+          </div>
         </div>
 
         {user && (
