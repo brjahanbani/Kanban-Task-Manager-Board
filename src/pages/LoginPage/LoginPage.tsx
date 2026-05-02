@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Kanban } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import './LoginPage.css';
 
@@ -34,11 +35,33 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="login-page">
-      <div className="login-card">
-        {/* Logo */}
-        <div className="login-logo">
-          <div className="login-logo-mark">K</div>
-          <h1 className="login-app-name">Kanban Board</h1>
+      {/* Dynamic Background Elements */}
+      <div className="bg-orb orb-1"></div>
+      <div className="bg-orb orb-2"></div>
+      <div className="bg-orb orb-3"></div>
+      
+      <div className="floating-boards">
+        <div className="board-prop board-1">
+          <div className="prop-header"></div><div className="prop-card"></div><div className="prop-card"></div>
+        </div>
+        <div className="board-prop board-2">
+          <div className="prop-header"></div><div className="prop-card"></div>
+        </div>
+        <div className="board-prop board-3">
+          <div className="prop-header"></div><div className="prop-card"></div><div className="prop-card"></div><div className="prop-card"></div>
+        </div>
+      </div>
+
+      <div className="login-card glass-panel">
+        {/* Logo matching the Header */}
+        <div className="login-logo-container">
+          <div className="login-logo-mark">
+            <Kanban size={28} strokeWidth={2.5} />
+          </div>
+          <h1 className="login-logotype">
+            <span className="login-logotype-kanban">Kanban</span>
+            <span className="login-logotype-board">Board</span>
+          </h1>
         </div>
 
         <p className="login-subtitle">
@@ -83,7 +106,7 @@ export const LoginPage: React.FC = () => {
 
         <p className="login-toggle">
           {mode === 'login' ? "Don't have an account? " : 'Already have an account? '}
-          <button onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }}>
+          <button onClick={() => { setMode(mode === 'login' ? 'signup' : 'login'); setError(''); }} type="button">
             {mode === 'login' ? 'Sign Up' : 'Sign In'}
           </button>
         </p>
