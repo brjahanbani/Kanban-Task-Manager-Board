@@ -9,6 +9,7 @@ import {
   closestCorners,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -106,6 +107,12 @@ export const Board: React.FC = () => {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { 
+      activationConstraint: { 
+        delay: 250, 
+        tolerance: 5 
+      } 
+    }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -211,9 +218,15 @@ export const Board: React.FC = () => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
-        onDragStart={handleDragStart}
+        onDragStart={(e) => {
+          handleDragStart(e);
+          document.body.classList.add('is-dragging');
+        }}
         onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
+        onDragEnd={(e) => {
+          handleDragEnd(e);
+          document.body.classList.remove('is-dragging');
+        }}
       >
         <div className="board-columns-wrapper" ref={scrollContainerRef}>
           <SortableContext items={columnsId} strategy={horizontalListSortingStrategy}>

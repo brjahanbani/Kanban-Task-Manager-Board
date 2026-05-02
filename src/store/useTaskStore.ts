@@ -42,7 +42,7 @@ interface TaskState {
 
   addTask: (columnId: Id, title: string, description?: string, deadline?: number, userId?: string) => Promise<void>;
   deleteTask: (id: Id) => Promise<void>;
-  updateTask: (id: Id, title: string, description?: string, deadline?: number) => Promise<void>;
+  updateTask: (id: Id, title: string, description?: string, deadline?: number, columnId?: Id) => Promise<void>;
 
   /** Optimistic local updates during drag (no DB call yet) */
   setColumns: (columns: Column[]) => void;
@@ -211,15 +211,19 @@ export const useTaskStore = create<TaskState>()((set, get) => ({
     set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) }));
   },
 
-  updateTask: async (id, title, description, deadline) => {
-    await supabase.from('tasks').update({
+  updateTask: async (id, title, description, deadline, columnId) => {
+    const updateData: any = {
       title,
       description: description ?? null,
       deadline: deadline ?? null,
-    }).eq('id', id);
+    };
+    if (columnId) updateData.column_id = columnId as string;
+
+    await supabase.from('tasks').update(updateData).eq('id', id);
+    
     set((s) => ({
       tasks: s.tasks.map((t) =>
-        t.id === id ? { ...t, title, description, deadline } : t
+        t.id === id ? { ...t, title, description, deadline, columnId: (columnId as any) ?? t.columnId } : t
       ),
     }));
   },

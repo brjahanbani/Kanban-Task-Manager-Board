@@ -194,6 +194,10 @@
     padding-bottom: 24px;
     gap: var(--spacing-4);
   }
+
+  body.is-dragging .board-columns-wrapper {
+    scroll-snap-type: none;
+  }
   
   .add-column-wrapper {
     min-width: calc(100vw - 48px);

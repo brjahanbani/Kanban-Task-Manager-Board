@@ -34,7 +34,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
   const [editDeadline, setEditDeadline] = useState(
     task.deadline ? toDatetimeLocal(task.deadline) : ''
   );
-  const { deleteTask, updateTask } = useTaskStore();
+  const [editColumnId, setEditColumnId] = useState(task.columnId);
+  const { deleteTask, updateTask, columns } = useTaskStore();
   const countdown = useCountdown(task.deadline);
 
   const {
@@ -57,7 +58,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
   const handleSave = () => {
     if (editTitle.trim()) {
       const deadlineMs = editDeadline ? new Date(editDeadline).getTime() : undefined;
-      updateTask(task.id, editTitle, editDesc, deadlineMs);
+      updateTask(task.id, editTitle, editDesc, deadlineMs, editColumnId);
       setIsEditing(false);
     }
   };
@@ -66,6 +67,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
     setEditTitle(task.title);
     setEditDesc(task.description || '');
     setEditDeadline(task.deadline ? toDatetimeLocal(task.deadline) : '');
+    setEditColumnId(task.columnId);
     setIsEditing(false);
   };
 
@@ -144,6 +146,20 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
                   onChange={(e) => setEditTitle(e.target.value)}
                   onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') handleSave(); }}
                 />
+              </div>
+
+              <div className="form-group">
+                <label>Move to Column</label>
+                <select 
+                  className="task-edit-datetime-modal" 
+                  value={editColumnId}
+                  onChange={(e) => setEditColumnId(e.target.value)}
+                  onKeyDown={(e) => e.stopPropagation()}
+                >
+                  {columns.map(col => (
+                    <option key={col.id} value={col.id}>{col.title}</option>
+                  ))}
+                </select>
               </div>
 
               {!isDoneColumn && (
