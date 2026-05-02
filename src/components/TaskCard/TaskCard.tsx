@@ -151,7 +151,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({ task, showWarning = false, i
               <div className="form-group">
                 <label>Move to Column</label>
                 <select 
-                  className="task-edit-datetime-modal" 
+                  className="task-edit-datetime-modal column-selector" 
                   value={editColumnId}
                   onChange={(e) => setEditColumnId(e.target.value)}
                   onKeyDown={(e) => e.stopPropagation()}

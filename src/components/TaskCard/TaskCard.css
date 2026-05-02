@@ -319,6 +319,18 @@
   color-scheme: dark;
 }
 
+.column-selector {
+  background-color: rgba(168, 85, 247, 0.15) !important; /* Purple tinted */
+  border-color: rgba(168, 85, 247, 0.4) !important;
+  color: #d8b4fe !important;
+  font-weight: 700 !important;
+}
+
+.column-selector option {
+  background-color: #1a1a2e;
+  color: #fff;
+}
+
 .task-edit-title-modal:focus,
 .task-edit-desc-modal:focus,
 .task-edit-datetime-modal:focus {

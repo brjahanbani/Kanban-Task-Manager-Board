@@ -18,8 +18,9 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskDesc, setNewTaskDesc] = useState('');
   const [newTaskDeadline, setNewTaskDeadline] = useState('');
+  const [newTaskColumnId, setNewTaskColumnId] = useState(column.id);
   const [userId, setUserId] = useState<string | undefined>(undefined);
-  const { addTask, deleteColumn } = useTaskStore();
+  const { addTask, deleteColumn, columns } = useTaskStore();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -106,10 +107,11 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
       const deadlineMs = newTaskDeadline
         ? new Date(newTaskDeadline).getTime()
         : undefined;
-      addTask(column.id, newTaskTitle, newTaskDesc, deadlineMs, userId);
+      addTask(newTaskColumnId, newTaskTitle, newTaskDesc, deadlineMs, userId);
       setNewTaskTitle('');
       setNewTaskDesc('');
       setNewTaskDeadline('');
+      setNewTaskColumnId(column.id);
       setIsAddingTask(false);
     }
   };
@@ -173,6 +175,19 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
               onChange={(e) => setNewTaskTitle(e.target.value)}
               onKeyDown={stopKeys}
             />
+            <div className="deadline-field">
+              <label className="deadline-label">Move to Column</label>
+              <select 
+                className="add-task-input column-selector"
+                value={newTaskColumnId}
+                onChange={(e) => setNewTaskColumnId(e.target.value)}
+                onKeyDown={stopKeys}
+              >
+                {columns.map(col => (
+                  <option key={col.id} value={col.id}>{col.title}</option>
+                ))}
+              </select>
+            </div>
             <textarea
               className="add-task-textarea"
               placeholder="Description (optional)"
