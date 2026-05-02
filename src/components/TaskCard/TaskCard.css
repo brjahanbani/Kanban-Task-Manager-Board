@@ -399,3 +399,28 @@
   from { opacity: 0; transform: translateY(30px) scale(0.97); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
+
+@media (max-width: 600px) {
+  .task-modal-content {
+    width: 95%;
+    border-radius: 20px;
+  }
+  
+  .task-modal-header {
+    padding: 20px 24px 12px;
+  }
+  
+  .task-modal-body {
+    padding: 0 24px 24px;
+    gap: 16px;
+  }
+  
+  .task-edit-title-modal {
+    font-size: 1.1rem;
+    padding: 12px 16px;
+  }
+  
+  .task-modal-footer {
+    padding: 16px 24px;
+  }
+}

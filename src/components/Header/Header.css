@@ -189,5 +189,55 @@
   font-size: 0.7rem;
   color: var(--text-secondary);
   text-align: center;
-  margin-top: 0.5rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 var(--spacing-4);
+    height: 56px;
+  }
+  
+  .logotype {
+    font-size: 1.1rem;
+  }
+  
+  .logotype-board {
+    display: none; /* Hide 'Board' on small mobile */
+  }
+  
+  .header-dates-badge {
+    display: none; /* Hide dates in header on mobile to save space */
+  }
+  
+  .user-email {
+    display: none; /* Hide email on mobile */
+  }
+  
+  .header-user {
+    padding: 4px;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+  
+  .logout-btn span {
+    display: none; /* Hide 'Sign out' text, keep icon */
+  }
+  
+  .logout-btn {
+    padding: 8px;
+    aspect-ratio: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-brand {
+    gap: 6px;
+  }
+  
+  .logo-mark {
+    width: 32px;
+    height: 32px;
+  }
 }

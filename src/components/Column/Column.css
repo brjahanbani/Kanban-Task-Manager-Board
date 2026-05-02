@@ -242,3 +242,20 @@
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.5; }
 }
+
+@media (max-width: 768px) {
+  .board-column {
+    width: calc(100vw - 48px);
+    min-width: calc(100vw - 48px);
+    scroll-snap-align: center;
+    max-height: 100%;
+  }
+  
+  .column-header {
+    padding: var(--spacing-2) var(--spacing-3);
+  }
+  
+  .column-title {
+    font-size: 0.85rem;
+  }
+}

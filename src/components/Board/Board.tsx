@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { User } from '@supabase/supabase-js';
 import { supabase } from '../../lib/supabase';
 import React, { useMemo } from 'react';
@@ -69,6 +69,33 @@ export const Board: React.FC = () => {
   const [draggedTaskInitialCol, setDraggedTaskInitialCol] = useState<string | null>(null);
   const [isAddingColumn, setIsAddingColumn] = useState(false);
   const [newColumnTitle, setNewColumnTitle] = useState('');
+  const [activeColumnIndex, setActiveColumnIndex] = useState(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Mobile scroll tracking
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const width = container.offsetWidth;
+      const newIndex = Math.round(scrollLeft / width);
+      if (newIndex !== activeColumnIndex) {
+        setActiveColumnIndex(newIndex);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [activeColumnIndex]);
+
+  const scrollToColumn = (index: number) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const width = container.offsetWidth;
+    container.scrollTo({ left: index * width, behavior: 'smooth' });
+  };
 
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
@@ -188,7 +215,7 @@ export const Board: React.FC = () => {
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="board-columns-wrapper">
+        <div className="board-columns-wrapper" ref={scrollContainerRef}>
           <SortableContext items={columnsId} strategy={horizontalListSortingStrategy}>
             {columns.map((col) => (
               <BoardColumn
@@ -223,6 +250,24 @@ export const Board: React.FC = () => {
               </button>
             )}
           </div>
+        </div>
+
+        {/* Mobile Column Navigation Dots */}
+        <div className="mobile-column-nav">
+          {columns.map((_, idx) => (
+            <button
+              key={idx}
+              className={`nav-dot ${activeColumnIndex === idx ? 'active' : ''}`}
+              onClick={() => scrollToColumn(idx)}
+              aria-label={`Go to column ${idx + 1}`}
+            />
+          ))}
+          {/* Dot for 'Add Column' wrapper */}
+          <button
+            className={`nav-dot ${activeColumnIndex === columns.length ? 'active' : ''}`}
+            onClick={() => scrollToColumn(columns.length)}
+            aria-label="Go to add column"
+          />
         </div>
 
         <DragOverlay>
