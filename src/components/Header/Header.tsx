@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({ user }) => {
         <div className="header-dates-badge">
           <div className="date-item tr">
             <Calendar size={12} className="date-icon-tr" />
-            <span className="date-text">{new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date())}</span>
+            <span className="date-text">{new Intl.DateTimeFormat('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date())}</span>
           </div>
           <div className="date-divider"></div>
           <div className="date-item fa">
