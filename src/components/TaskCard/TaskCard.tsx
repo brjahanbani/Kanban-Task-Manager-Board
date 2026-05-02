@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Trash2, Edit2, Check, X } from 'lucide-react';
+import { Trash2, Edit2, X } from 'lucide-react';
 import type { Task } from '../../types';
 import { useTaskStore } from '../../store/useTaskStore';
 import { useCountdown } from '../../hooks/useCountdown';
