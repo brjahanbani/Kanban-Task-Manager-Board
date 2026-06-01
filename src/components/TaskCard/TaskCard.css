@@ -15,6 +15,7 @@
   position: relative;
   overflow: hidden;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+  flex-shrink: 0;
 }
 
 .task-card::before {
@@ -103,6 +104,11 @@
   line-height: 1.35;
   word-break: break-word;
   margin: 0;
+}
+
+.task-title-done {
+  text-decoration: line-through;
+  opacity: 0.6;
 }
 
 /* ---- Animated Fire (Force In Progress) ---- */
