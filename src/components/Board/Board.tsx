@@ -101,8 +101,16 @@ export const Board: React.FC = () => {
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
 
   const doneColumnIds = useMemo(() => columns.filter(col => col.title.toLowerCase().includes('done')).map(c => c.id), [columns]);
-  const totalTasks = tasks.length;
-  const doneTasksCount = tasks.filter(task => doneColumnIds.includes(task.columnId)).length;
+  const supportColumnIds = useMemo(() => 
+    columns.filter(col => col.title.toLowerCase().includes('support') || col.id === 'support-deadlines').map(c => c.id),
+    [columns]
+  );
+  const activeTasksForProgress = useMemo(() => 
+    tasks.filter(task => !supportColumnIds.includes(task.columnId)),
+    [tasks, supportColumnIds]
+  );
+  const totalTasks = activeTasksForProgress.length;
+  const doneTasksCount = activeTasksForProgress.filter(task => doneColumnIds.includes(task.columnId)).length;
   const progressPercent = totalTasks === 0 ? 0 : Math.round((doneTasksCount / totalTasks) * 100);
 
   const sensors = useSensors(

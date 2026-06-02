@@ -121,8 +121,9 @@
 }
 
 .add-column-wrapper {
-  min-width: 300px;
-  width: 300px;
+  min-width: 240px;
+  width: 240px;
+  flex: 0 0 auto;
   height: max-content;
 }
 

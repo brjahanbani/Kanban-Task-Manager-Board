@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, LifeBuoy } from 'lucide-react';
 import type { Column, Task } from '../../types';
 import { TaskCard } from '../TaskCard/TaskCard';
 import { useTaskStore } from '../../store/useTaskStore';
@@ -28,12 +28,6 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
     });
   }, []);
 
-  // Returns a datetime-local string 24h from now (the default)
-  const defaultDeadline = () => {
-    const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
-    return d.toISOString().slice(0, 16);
-  };
-
   const tasksIds = useMemo(() => tasks.map((t) => t.id), [tasks]);
 
   const {
@@ -50,6 +44,8 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const isForceInProgress = column.title.toLowerCase().includes('force') &&
     column.title.toLowerCase().includes('progress');
 
+  const isSupportDeadlines = column.title.toLowerCase().includes('support') || column.id === 'support-deadlines';
+
   const getColumnTheme = (id: string): React.CSSProperties => {
     if (isForceInProgress) {
       return {
@@ -58,6 +54,15 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
         '--task-bg': 'rgba(60, 48, 8, 0.65)',
         '--task-border': 'rgba(234, 179, 8, 0.28)',
         '--task-hover-bg': 'rgba(234, 179, 8, 0.18)',
+      } as React.CSSProperties;
+    }
+    if (isSupportDeadlines) {
+      return {
+        '--col-bg': 'rgba(20, 184, 166, 0.06)',
+        '--col-accent': 'rgba(20, 184, 166, 1)',
+        '--task-bg': 'rgba(15, 50, 60, 0.6)',
+        '--task-border': 'rgba(20, 184, 166, 0.25)',
+        '--task-hover-bg': 'rgba(20, 184, 166, 0.18)',
       } as React.CSSProperties;
     }
     switch (id) {
@@ -127,13 +132,14 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
   const stopKeys = (e: React.KeyboardEvent) => e.stopPropagation();
 
   return (
-    <div ref={setNodeRef} style={style} className="board-column">
+    <div ref={setNodeRef} style={style} className={`board-column ${isSupportDeadlines ? 'column-support-deadlines' : ''}`}>
       {/* Column header — drag handle */}
       <div className="column-header" {...attributes} {...listeners}>
         <div className="column-accent-bar" />
         <div className="column-title-container">
-          <h2 className={`column-title${isForceInProgress ? ' column-title-warning' : ''}`}>
+          <h2 className={`column-title${isForceInProgress ? ' column-title-warning' : ''}${isSupportDeadlines ? ' column-title-support' : ''}`}>
             {isForceInProgress && <span className="col-warning-icon">⚠</span>}
+            {isSupportDeadlines && <LifeBuoy size={16} className="col-support-icon" />}
             {column.title}
           </h2>
           <span className="column-task-count">{tasks.length}</span>
@@ -200,7 +206,7 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
               <input
                 type="datetime-local"
                 className="add-task-input deadline-input"
-                value={newTaskDeadline || defaultDeadline()}
+                value={newTaskDeadline}
                 onChange={(e) => setNewTaskDeadline(e.target.value)}
                 onKeyDown={stopKeys}
               />
@@ -222,7 +228,11 @@ export const BoardColumn: React.FC<ColumnProps> = ({ column, tasks }) => {
             </div>
           </div>
         ) : (
-          <button className="add-task-btn" onClick={() => setIsAddingTask(true)}>
+          <button className="add-task-btn" onClick={() => {
+            const d = new Date(Date.now() + 24 * 60 * 60 * 1000);
+            setNewTaskDeadline(d.toISOString().slice(0, 16));
+            setIsAddingTask(true);
+          }}>
             <Plus size={15} />
             <span>Add task</span>
           </button>

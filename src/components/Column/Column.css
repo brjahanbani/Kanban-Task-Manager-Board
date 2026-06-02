@@ -4,12 +4,13 @@
 .board-column {
   background-color: var(--col-bg, var(--bg-secondary));
   border-radius: var(--radius-lg);
-  width: 340px;
-  min-width: 340px;
+  width: 300px;
+  min-width: 240px;
+  max-width: 340px;
   display: flex;
   flex-direction: column;
   /* Height is fully controlled by the parent flex container */
-  flex: 0 0 auto;    /* don't grow/shrink width-wise */
+  flex: 1 1 0;       /* grow and shrink dynamically to fit viewport */
   min-height: 0;     /* allow internal scroll to engage */
   box-shadow: var(--shadow-md);
   border: 1px solid rgba(255, 255, 255, 0.05);
@@ -258,4 +259,30 @@
   .column-title {
     font-size: 0.85rem;
   }
+}
+
+/* ============================================================
+   Support Deadlines Custom styling
+   ============================================================ */
+.column-support-deadlines {
+  border: 1px solid rgba(20, 184, 166, 0.25) !important;
+  box-shadow: 0 0 15px rgba(20, 184, 166, 0.08), var(--shadow-md) !important;
+  background-image: radial-gradient(circle at top right, rgba(20, 184, 166, 0.03), transparent 70%);
+}
+
+.column-title-support {
+  color: #14b8a6 !important;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(20, 184, 166, 0.4);
+}
+
+.col-support-icon {
+  margin-right: 6px;
+  animation: spin-slow 12s linear infinite;
+  color: #14b8a6;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
